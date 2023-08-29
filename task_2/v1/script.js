@@ -68,7 +68,7 @@ $(document).ready(function() {
   // Function to switch turns between players
   function switchTurn() {
     currentPlayer = 3 - currentPlayer; // Toggle between 1 and 2
-    $('.turn').text(`Current Turn: ${playerNames[currentPlayer - 1]}`);
+    $('.turn').text(`Current Turn: ${playerNames[1-moves%2]}`);
     moves ++;
     $('.moves').text(`Number of Moves: ${moves}`);
     isPawnClicked = 0
@@ -138,12 +138,17 @@ $(document).ready(function() {
   }
   // Event listener for form submission
   $('#nameForm').submit(function(event) {
+    playerNames = []
+    $('.p1-title').hide();
+    $('.p2-title').hide();
     event.preventDefault();
-    playerNames.push($('#player1').val(), $('#player2').val());
     $('#nameForm').hide();
     initializeBoard();
+    playerNames.push($('#player1').val(), $('#player2').val());
     $('.turn').text(`Current Turn: ${playerNames[currentPlayer - 1]}`);
     $('.moves').text('Number of Moves: ' + moves)
+    $('.player-titles').append($('<h3>').addClass('p1-title').text(`Player 1 (White): ${$('#player1').val()}`))
+    $('.player-titles').append($('<h3>').addClass('p2-title').text(`Player 2 (Black): ${$('#player2').val()}`))
   });
 
   // Event listener for board squares
@@ -163,4 +168,3 @@ $(document).ready(function() {
     $('.moves').text(`Number of Moves: ${moves}`);
   });
 });
-

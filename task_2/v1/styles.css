@@ -1,4 +1,31 @@
 /* styles.css */
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  color: #333333;
+  font-family: "Lato", Calibri, sans-serif;
+  font-size: 16px;
+} 
+
+.column {
+  position: relative;
+  float: left;
+  height: 100%;
+  min-height: 100%;
+  width: 50%; }
+
+div.players {
+  width: 70%;
+  margin: 13vmin auto 0;
+  box-sizing: border-box;
+  padding: 20px 30px;
+  background-color: #F1F1FF;
+  color: #3A3042;
+  border-radius: 3px;
+  box-shadow: 1px 1px 3px #232621; }
+
 .board {
   display: grid;
   grid-template-columns: repeat(8, 50px);

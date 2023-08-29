@@ -10,7 +10,7 @@
 </head>
 <body>
   <div class="game">
-    <div class="players">
+    <div class="players column">
       <form id="nameForm">
         <label for="player1">Player 1:</label>
         <input type="text" id="player1" required>
@@ -18,13 +18,18 @@
         <input type="text" id="player2" required>
         <button type="submit">Start Game</button>
       </form>
+      <div class = "player-titles">
+      </div>
       <div class="turn"></div>
       <div class="moves"></div>
     </div>
-    <div class="board" id="board">
+    <div class="board column" id="board">
       <!-- The board squares and pieces will be generated here -->
+
     </div>
-    <button class="restart-button">Restart Game</button>
+    <div class = "restart column">
+      <button class="restart-button">Restart Game</button>
+    </div>
   </div>
   <script src="script.js"></script>
 </body>
