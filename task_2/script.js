@@ -3,6 +3,11 @@ var playerNames = [];
 var gameBoard = []; // You can use a 2D array to represent the board state
 var moves = 0
 var isPawnClicked = 0
+var selectedPiece = {
+  row: undefined,
+  col: undefined,
+  label: undefined
+}
 const numRows = 8;
 const numCols = 8;
 
@@ -29,19 +34,17 @@ function initializeBoard() {
 function pawnAddEventListener(pawn) {
   pawn.click(function() {
     if ($(this).hasClass(`pawn-p${currentPlayer}`)){
-      if (isPawnClicked === 0) {
-        console.log('clicked')
-        
-        const row = Math.floor($(this).parent().index() / numRows); // Calculate row index
-        const col = $(this).parent().index() % numCols; // Calculate column index
-        
-        handleMove(row, col);
-        isPawnClicked = 1
-      }
-      else if (isPawnClicked === 1) {
-        $('.tile').removeClass('valid-move')
-        isPawnClicked = 0
-      }
+      $('.tile').off('click', '.valid-move, .eating-move')
+      $('.valid-move').removeClass('valid-move');
+      $('.eating-move').removeClass('eating-move');
+      const row = Math.floor($(this).parent().index() / numRows); // Calculate row index
+      const col = $(this).parent().index() % numCols; // Calculate column index
+      
+      selectedPiece.row = row
+      selectedPiece.col = col
+      selectedPiece.label = gameBoard[row][col]
+
+      handleMove(row, col);
     }
   });
 }
@@ -103,9 +106,9 @@ function switchTurn() {
 
 // Function to handle a move
 function handleMove(row, col) {
-  const selectedPiece = gameBoard[row][col];
+  // const selectedPiece = gameBoard[row][col];
 
-  if (selectedPiece === currentPlayer) {
+  if (selectedPiece.label === currentPlayer) {
     
     highlightValidMoves(row, col);
     
@@ -117,11 +120,15 @@ function handleMove(row, col) {
 
       // Implement the movement logic
       // console.log(gameBoard);
-      if (gameBoard[destRow][destCol] !== -1 ) {
-        gameBoard[destRow][destCol] = selectedPiece;
-        gameBoard[row][col] = 0; // Clear the source square
-        $('.valid-move').removeClass('valid-move');
-        switchTurn();
+      if (destCol !== undefined && destRow !== undefined){
+        if (gameBoard[destRow][destCol] === 0 ) {
+          gameBoard[destRow][destCol] = selectedPiece.label;
+          gameBoard[selectedPiece.row][selectedPiece.col] = 0; // Clear the source square
+          $('.tile').off('click', '.valid-move, .eating-move')
+          $('.valid-move').removeClass('valid-move');
+          $('.eating-move').removeClass('eating-move');
+          switchTurn();
+        }
       }
       renderBoard();
     });
@@ -130,32 +137,51 @@ function handleMove(row, col) {
 
 // Function to highlight valid moves for a selected piece
 function highlightValidMoves(row, col) {
-  const selectedPiece = gameBoard[row][col];
+  // let selectedPiece = gameBoard[row][col];
 
   // Clear existing valid move highlights
+  $('.tile').off('click', '.valid-move, .eating-move')
   $('.valid-move').removeClass('valid-move');
+  $('.eating-move').removeClass('eating-move');
 
   // Define possible move directions based on the player
-  const moveDirections = (selectedPiece === 2) ? [[-1, -1], [-1, 1]] : [[1, -1], [1, 1]];
+  let moveDirections = (selectedPiece.label === 2) ? [[-1, -1], [-1, 1]] : [[1, -1], [1, 1]];
   // Check each move direction
   for (const direction of moveDirections) {
-    const newRow = row + direction[0];
-    const newCol = col + direction[1];
+    let movementRow = row + direction[0]
+    let movementCol = col + direction[1]
+
+    let eatingRow = row + direction[0] * 2
+    let eatingCol = col + direction[1] * 2
 
     // Check if the new position is within the bounds of the board
-    if (newRow >= 0 && newRow < numRows && newCol >= 0 && newCol < numCols) {
-      const targetPiece = gameBoard[newRow][newCol];
+    if (movementRow >= 0 && movementRow < numRows && movementCol >= 0 && movementCol < numCols) {
+      let targetPiece = gameBoard[movementRow][movementCol];
       // Check if the target square is empty
       if (targetPiece === 0) {
-        $(`#r${newRow}c${newCol}.tile`).addClass('valid-move');
+        $(`#r${movementRow}c${movementCol}.tile`).addClass('valid-move');
+      } else if (targetPiece == 3 - currentPlayer && gameBoard[eatingRow][eatingCol] === 0) {
+        $(`#r${eatingRow}c${eatingCol}.tile`).addClass('valid-move').addClass('eating-move');
+        $(`#r${eatingRow}c${eatingCol}.eating-move`).click(function () {
+          gameBoard[movementRow][movementCol] = 0
+        })
       }
     }
   }
 }
 
 $(document).ready(function() {
-  
   // Event listener for form submission
+  $('.restart-button').click(function() {
+    // Reset the game state and UI
+    $('.board').empty();
+    $('#nameForm').show();
+    currentPlayer = 1
+    moves = 0
+    $('.turn').text(`Current Turn: ${playerNames[currentPlayer - 1]}`);
+    $('.moves').text(`Number of Moves: ${moves}`);
+  });
+
   $('#nameForm').submit(function(event) {
     event.preventDefault();
     playerNames.push($('#player1').val(), $('#player2').val());
