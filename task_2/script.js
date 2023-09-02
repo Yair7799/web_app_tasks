@@ -160,11 +160,14 @@ function highlightValidMoves(row, col) {
       // Check if the target square is empty
       if (targetPiece === 0) {
         $(`#r${movementRow}c${movementCol}.tile`).addClass('valid-move');
-      } else if (targetPiece == 3 - currentPlayer && gameBoard[eatingRow][eatingCol] === 0) {
-        $(`#r${eatingRow}c${eatingCol}.tile`).addClass('valid-move').addClass('eating-move');
-        $(`#r${eatingRow}c${eatingCol}.eating-move`).click(function () {
-          gameBoard[movementRow][movementCol] = 0
-        })
+      } else if (targetPiece == 3 - currentPlayer) {
+          if (eatingRow >= 0 && eatingRow < numRows && eatingCol >= 0 && eatingCol < numCols) {
+            if (gameBoard[eatingRow][eatingCol] === 0)
+              $(`#r${eatingRow}c${eatingCol}.tile`).addClass('valid-move').addClass('eating-move');
+              $(`#r${eatingRow}c${eatingCol}.eating-move`).click(function () {
+                gameBoard[movementRow][movementCol] = 0
+              })
+          }
       }
     }
   }
