@@ -49,6 +49,24 @@ function pawnAddEventListener(pawn) {
   });
 }
 
+function queenAddEventListener(pawn) {
+  pawn.click(function() {
+    if ($(this).hasClass(`pawn-p${currentPlayer}`)){
+      $('.tile').off('click', '.valid-move, .eating-move')
+      $('.valid-move').removeClass('valid-move');
+      $('.eating-move').removeClass('eating-move');
+      const row = Math.floor($(this).parent().index() / numRows); // Calculate row index
+      const col = $(this).parent().index() % numCols; // Calculate column index
+      
+      selectedPiece.row = row
+      selectedPiece.col = col
+      selectedPiece.label = gameBoard[row][col]
+
+      handleMove(row, col);
+    }
+  });
+}
+
 function renderBoard() {
   board = $('.board')
   board.empty()
@@ -59,9 +77,7 @@ function renderBoard() {
       
       let tileId = `r${row}c${col}`
       let tile = $(`#${tileId}`)
-      let pawn = $('<div>').addClass('pawn');
-
-      pawnAddEventListener(pawn)
+      let pawn = $('<div>');
 
       if (tile.length === 0) {
         tile = $('<div>').addClass('tile');
@@ -74,10 +90,23 @@ function renderBoard() {
           if (!tile.hasClass('black-tile')) {
             tile.addClass('black-tile');
           }
+          pawn.addClass('pawn')
           pawn.addClass(`pawn-p${currentTile}`)
+          pawnAddEventListener(pawn)
           tile.append(pawn);
           break;
         
+        case 3:
+        case 4:
+          if (!tile.hasClass('black-tile')) {
+            tile.addClass('black-tile');
+          }
+          pawn.addClass('queen')
+          pawn.addClass(`queen-p${(currentTile % 2) + 1}`)
+          queenAddEventListener(pawn)
+          tile.append(pawn);
+          break;
+
         case 0:
           if (!tile.hasClass('black-tile')) {
             tile.addClass('black-tile');
@@ -91,6 +120,17 @@ function renderBoard() {
           break;
       }
       tile.appendTo(board);
+    }
+  }
+}
+
+function checkForQueen() {
+  for (let i = 0; i < numRows; i++) {
+    if (gameBoard[0][i] === 2) {
+      gameBoard[0][i] = 3
+    }
+    if (gameBoard[numRows - 1][i] === 1) {
+      gameBoard[numRows - 1][i] = 4
     }
   }
 }
@@ -127,6 +167,7 @@ function handleMove(row, col) {
           $('.tile').off('click', '.valid-move, .eating-move')
           $('.valid-move').removeClass('valid-move');
           $('.eating-move').removeClass('eating-move');
+          checkForQueen();
           switchTurn();
         }
       }
@@ -146,6 +187,7 @@ function highlightValidMoves(row, col) {
 
   // Define possible move directions based on the player
   let moveDirections = (selectedPiece.label === 2) ? [[-1, -1], [-1, 1]] : [[1, -1], [1, 1]];
+
   // Check each move direction
   for (const direction of moveDirections) {
     let movementRow = row + direction[0]

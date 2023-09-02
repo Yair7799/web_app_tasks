@@ -42,6 +42,23 @@
   background-color: #000;
 }
 
+.queen {
+  border: 15px solid #333;
+  border-radius: 100px;
+  width: 10px;
+  height: 10px;
+  margin: 0.5%;
+  position: absolute; /* Add this line to use absolute positioning */
+}
+
+.queen-p1 {
+  border: 15px solid #fff;
+}
+
+.queen-p2 {
+  border: 15px solid #000;
+}
+
 .valid-move {
   background-color: blue;
 }
