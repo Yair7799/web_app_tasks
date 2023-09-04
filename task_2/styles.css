@@ -1,9 +1,50 @@
-/* styles.css */
+body, html {
+  margin: 0;
+  padding: 0;
+}
+
+.game {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px;
+  padding: 20px;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+}
+
+.column {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+}
+
 .board {
+  width: 400px; 
+  height: 400px;
+  background-color: #FFF  ; 
+  border-radius: 20px; 
   display: grid;
-  grid-template-columns: repeat(8, 50px);
-  grid-template-rows: repeat(8, 50px);
-  gap: 2px;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  overflow: visible;
+  position: relative;
+}
+
+.stats {
+  background-color: #f0f0f0; 
+  padding: 10px; 
+  border-radius: 10px; 
+  text-align: center;
+  margin-top: 10px;
+  overflow: visible;
+  
+}
+
+.turn, .moves {
+  font-size: 18px; 
+  margin-bottom: 10px; 
 }
 
 .tile {
@@ -30,8 +71,8 @@
   height: 40px;
   border-radius: 50%;
   background-color: #333;
-  margin: 0.5%;
-  position: absolute; /* Add this line to use absolute positioning */
+  margin: 1.4%;
+  position: absolute;
 }
 
 .pawn-p1 {
@@ -48,7 +89,7 @@
   width: 10px;
   height: 10px;
   margin: 0.5%;
-  position: absolute; /* Add this line to use absolute positioning */
+  position: absolute;
 }
 
 .queen-p1 {
@@ -61,4 +102,49 @@
 
 .valid-move {
   background-color: blue;
+}
+
+.restart-button {
+  background-color: #dc3545;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.restart-button:hover {
+  background-color: #c82333;
+}
+
+
+#nameForm {
+  text-align: center;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button[type="submit"] {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: #0056b3;
 }
