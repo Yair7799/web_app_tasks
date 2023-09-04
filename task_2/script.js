@@ -157,6 +157,28 @@ function checkForQueen() {
   }
 }
 
+function checkForWin(){
+  let whiteLost = true
+  let blackLost = true
+  for (let row = 0; row < numRows; row++) {
+    for (let col = 0; col < numCols; col++) {
+      if (gameBoard[row][col] === 1){
+        whiteLost = false
+      }
+      if (gameBoard[row][col] === 2) {
+        blackLost = false
+      }
+    }
+  }
+  if (blackLost === true) {
+    alert('white won!')
+  }
+  
+  else if (whiteLost === true) {
+    alert('black won!')
+  } 
+}
+
 // Function to switch turns between players
 function switchTurn() {
   currentPlayer = 3 - currentPlayer; // Toggle between 1 and 2
@@ -194,6 +216,7 @@ function handleMove(row, col) {
         }
       }
       renderBoard();
+      checkForWin()
     });
   }
 }
