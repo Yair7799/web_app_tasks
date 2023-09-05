@@ -265,36 +265,38 @@ function highlightQueenValidMoves(row, col) {
   let moveDirections = ((Math.abs(selectedPiece.label) % 2) + 1 === 2) ? [[-1, -1], [-1, 1]] : [[1, -1], [1, 1]];
 
   // Check each move direction
+  modifiers = [-1, 1]
   for (const direction of moveDirections) {
     let chosenDirection = []
-    chosenDirection[0] = direction[0] * (selectedPiece.label / Math.abs(selectedPiece.label))
-    chosenDirection[1] = direction[1] * (selectedPiece.label / Math.abs(selectedPiece.label))
-    
-    for (let i = 1; i < numRows; i++) {
-      let movementRow = row + chosenDirection[0] * i
-      let movementCol = col + chosenDirection[1] * i
-      
-      let eatingRow = movementRow + direction[0] * (selectedPiece.label / Math.abs(selectedPiece.label))
-      let eatingCol = movementCol + direction[1] * (selectedPiece.label / Math.abs(selectedPiece.label))
-      // Check if the new position is within the bounds of the board
-      if (movementRow >= 0 && movementRow < numRows && movementCol >= 0 && movementCol < numCols) {
-        let targetPiece = gameBoard[movementRow][movementCol];
-        // Check if the target square is empty
-        if (targetPiece === 0) {
-          $(`#r${movementRow}c${movementCol}.tile`).addClass('valid-move');
-        } else if (Math.abs(targetPiece) <= 4 && Math.abs(targetPiece) > 0 && targetPiece != currentPlayer && 5 - Math.abs(targetPiece) != currentPlayer && Math.abs(targetPiece) != 5 - currentPlayer) {
-          if (eatingRow >= 0 && eatingRow < numRows && eatingCol >= 0 && eatingCol < numCols) {
-            if (gameBoard[eatingRow][eatingCol] === 0)  {
-              $(`#r${eatingRow}c${eatingCol}.tile`).addClass('valid-move').addClass('eating-move');
-              $(`#r${eatingRow}c${eatingCol}.eating-move`).click(function () {
-                gameBoard[movementRow][movementCol] = 0
-              })
+    // chosenDirection[0] = direction[0] * (selectedPiece.label / Math.abs(selectedPiece.label))
+    // chosenDirection[1] = direction[1] * (selectedPiece.label / Math.abs(selectedPiece.label))
+    modifiers.forEach(modifier => {
+      for (let i = 1; i < numRows; i++) {
+        let movementRow = row + direction[0] * i * modifier
+        let movementCol = col + direction[1] * i * modifier
+        
+        let eatingRow = movementRow + direction[0] * (selectedPiece.label / Math.abs(selectedPiece.label))
+        let eatingCol = movementCol + direction[1] * (selectedPiece.label / Math.abs(selectedPiece.label))
+        // Check if the new position is within the bounds of the board
+        if (movementRow >= 0 && movementRow < numRows && movementCol >= 0 && movementCol < numCols) {
+          let targetPiece = gameBoard[movementRow][movementCol];
+          // Check if the target square is empty
+          if (targetPiece === 0) {
+            $(`#r${movementRow}c${movementCol}.tile`).addClass('valid-move');
+          } else if (Math.abs(targetPiece) <= 4 && Math.abs(targetPiece) > 0 && targetPiece != currentPlayer && 5 - Math.abs(targetPiece) != currentPlayer && Math.abs(targetPiece) != 5 - currentPlayer) {
+            if (eatingRow >= 0 && eatingRow < numRows && eatingCol >= 0 && eatingCol < numCols) {
+              if (gameBoard[eatingRow][eatingCol] === 0)  {
+                $(`#r${eatingRow}c${eatingCol}.tile`).addClass('valid-move').addClass('eating-move');
+                $(`#r${eatingRow}c${eatingCol}.eating-move`).click(function () {
+                  gameBoard[movementRow][movementCol] = 0
+                })
+              }
+              break;
             }
-            break;
           }
         }
       }
-    }
+    });
   }
 }
 // Function to highlight valid moves for a selected piece
